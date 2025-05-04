@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
 import TodoList from "./TodoList";
-import { getTodoList, deletePost, createPost, updateTask, deleteAllTasks } from "../services/apiServices";
+import { getTodoList, deletePost, createPost, updateTask, deleteAllTasks, createUser } from "../services/apiServices";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
+
+  const postUser = async () => {
+    try {
+      await createUser(); 
+      handleGetTodoList(); 
+    } catch (error) {
+      console.error("Error al inicializar el usuario:", error);
+    }
+  };
 
   const addTask = async (e) => {
     if (e.key === "Enter" && e.target.value.trim() !== "") {
@@ -41,7 +50,8 @@ const App = () => {
 };
 
   useEffect(() => {
-    handleGetTodoList()
+    handleGetTodoList();
+    postUser();
   }, [])
 
 
@@ -50,7 +60,7 @@ const App = () => {
     <div className="todo-list-container">
       <input type="text" placeholder="Añadir nueva tarea..." onKeyDown={addTask} />
       <TodoList tasks={tasks} deleteTask={deleteTask} taskCompleted={taskCompleted} />
-      <p>{tasks.length} tarea{tasks.length !== 1 ? "s" : ""} pendientes</p>
+      <p>{tasks.length} tarea{tasks.length !== 1 ? "s" : ""} pendiente{tasks.length !== 1 ? "s" : ""}</p>
       <button onClick={clearAllTasks} className="delete-all-btn">🗑 Borrar todas las tareas</button>
     </div>
   );
