@@ -23,6 +23,9 @@ export const createUser = async () => {
         return false;
     }
 };
+ 
+
+
 
 export const getTodoList = async () => {
     try {
@@ -32,7 +35,7 @@ export const getTodoList = async () => {
             if (request.status === 404){
                 console.log('No existe usuario.');
             }
-            return [];
+            return false;
         }
         const response = await request.json();
         return response.todos || [];

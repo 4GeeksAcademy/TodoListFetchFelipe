@@ -7,8 +7,10 @@ const App = () => {
 
   const postUser = async () => {
     try {
-      await createUser(); 
-      handleGetTodoList(); 
+      const existingUser = await getTodoList();
+      if (existingUser === false) { 
+        await createUser();
+      }
     } catch (error) {
       console.error("Error al inicializar el usuario:", error);
     }
@@ -28,8 +30,8 @@ const App = () => {
 
   const handleGetTodoList = async () => {
     const listTask = await getTodoList();
-    setTasks(listTask)
-  }
+    setTasks(Array.isArray(listTask) ? listTask : []);
+};
 
 
 
@@ -47,13 +49,11 @@ const App = () => {
   const clearAllTasks = async () => {
     const deleted = await deleteAllTasks();
     if (deleted) setTasks([]);
-};
+  };
 
   useEffect(() => {
-    handleGetTodoList();
-    postUser();
-  }, [])
-
+    postUser().then(() => handleGetTodoList());
+}, []);
 
 
   return (
